@@ -107,7 +107,7 @@ namespace Draw
             viewPort.Invalidate();
         }
 
-        private void toolStripButton1_Click(object sender, EventArgs e)
+        private void DrawTriangleButton(object sender, EventArgs e)
         {
             dialogProcessor.AddRandomTriangle();
 
@@ -117,7 +117,7 @@ namespace Draw
 
         }
 
-        private void toolStripButton2_Click(object sender, EventArgs e)
+        private void DrawPointButton(object sender, EventArgs e)
         {
             dialogProcessor.AddRandomPoint();
 
@@ -126,7 +126,7 @@ namespace Draw
             viewPort.Invalidate();
         }
 
-        private void toolStripButton3_Click(object sender, EventArgs e)
+        private void DrawLineButton(object sender, EventArgs e)
         {
             dialogProcessor.AddRandomLine();
 
@@ -179,5 +179,7 @@ namespace Draw
                 viewPort.Invalidate();
             }
         }
+
+        
     }
 }
