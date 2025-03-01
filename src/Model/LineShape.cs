@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace Draw
 {
@@ -12,6 +13,8 @@ namespace Draw
 
         public LineShape(RectangleF rect) : base(rect)
         {
+            StrokeColor = Color.Black;  
+            StrokeWidth = 2;
         }
 
         public LineShape(LineShape rectangle) : base(rectangle)
@@ -43,28 +46,15 @@ namespace Draw
         /// </summary>
         public override void DrawSelf(Graphics grfx)
         {
-            base.DrawSelf(grfx);
-
-            var points = new PointF[]
+            using (Pen pen = new Pen(StrokeColor, StrokeWidth))
             {
-                new PointF(
-                    Location.X,
-                    Location.Y),
-                new PointF(
-                    Location.X + Width,
-                    Location.Y),
-            };
+                if (UseGradient)
+                {
+                    pen.Brush = new LinearGradientBrush(Rectangle, GradientStartColor, GradientEndColor, LinearGradientMode.Vertical);
+                }
 
-            grfx.FillPolygon(
-                new SolidBrush(FillColor),
-                points
-                );
-
-            grfx.DrawPolygon(
-                Pens.Black,
-                points
-                );
-
+                grfx.DrawLine(pen, Rectangle.Left, Rectangle.Top, Rectangle.Right, Rectangle.Top);
+            }
         }
     }
 }

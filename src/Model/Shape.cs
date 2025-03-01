@@ -90,11 +90,33 @@ namespace Draw
 		}
 
         private int fillOpacity=255;
-        public virtual int FillOpacity
+		public virtual int FillOpacity
+		{
+			get { return fillOpacity; }
+			set { fillOpacity = value; }
+		}
+
+        private Color gradientStartColor = Color.White;
+        public virtual Color GradientStartColor
         {
-            get { return fillOpacity; }
-            set { fillOpacity = value; }
+            get { return gradientStartColor; }
+            set { gradientStartColor = value; }
         }
+
+        private Color gradientEndColor = Color.Black;
+        public virtual Color GradientEndColor
+        {
+            get { return gradientEndColor; }
+            set { gradientEndColor = value; }
+        }
+
+        private bool useGradient = false;
+        public virtual bool UseGradient
+        {
+            get { return useGradient; }
+            set { useGradient = value; }
+        }
+
 
 
         #endregion

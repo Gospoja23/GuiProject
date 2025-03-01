@@ -180,6 +180,37 @@ namespace Draw
             }
         }
 
-        
+        private void buttonGradientStart(object sender, EventArgs e)
+        {
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (dialogProcessor.Selection != null)
+                {
+                    dialogProcessor.Selection.GradientStartColor = colorDialog1.Color;
+                    viewPort.Invalidate();
+                }
+            }
+        }
+
+        private void buttonGradientEnd(object sender, EventArgs e)
+        {
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (dialogProcessor.Selection != null)
+                {
+                    dialogProcessor.Selection.GradientEndColor = colorDialog1.Color;
+                    viewPort.Invalidate();
+                }
+            }
+        }
+
+        private void checkBoxUseGradient_CheckedChanged(object sender, EventArgs e)
+        {
+            if (dialogProcessor.Selection != null)
+            {
+                dialogProcessor.Selection.UseGradient = checkBox1.Checked;
+                viewPort.Invalidate();
+            }
+        }
     }
 }

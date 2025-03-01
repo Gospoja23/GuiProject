@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace Draw
 {
@@ -91,31 +92,37 @@ namespace Draw
         /// </summary>
         public override void DrawSelf(Graphics grfx)
         {
-            base.DrawSelf(grfx);
-
-            var points = new PointF[]
+            using (GraphicsPath path = new GraphicsPath())
             {
-                new PointF(
-                    Location.X + Width / 2,
-                    Location.Y),
-                new PointF(
-                    Location.X + Width,
-                    Location.Y + Height),
-                new PointF(
-                    Location.X,
-                    Location.Y + Height)
-            };
+                PointF top = new PointF(Rectangle.Left + Rectangle.Width / 2, Rectangle.Top);
+                PointF left = new PointF(Rectangle.Left, Rectangle.Bottom);
+                PointF right = new PointF(Rectangle.Right, Rectangle.Bottom);
 
-            grfx.FillPolygon(
-                new SolidBrush(FillColor),
-                points
-                );
+                path.AddPolygon(new PointF[] { top, left, right });
 
-            grfx.DrawPolygon(
-                Pens.Black,
-                points
-                );
+                if (UseGradient)
+                {
+                    using (LinearGradientBrush brush = new LinearGradientBrush(
+                        new PointF(Rectangle.Left, Rectangle.Top),  // Начало градиента (верх)
+                        new PointF(Rectangle.Left, Rectangle.Bottom), // Конец градиента (низ)
+                        GradientStartColor, GradientEndColor))
+                    {
+                        grfx.FillPath(brush, path);
+                    }
+                }
+                else
+                {
+                    using (SolidBrush brush = new SolidBrush(FillColor))
+                    {
+                        grfx.FillPath(brush, path);
+                    }
+                }
 
+                using (Pen pen = new Pen(StrokeColor, StrokeWidth))
+                {
+                    grfx.DrawPath(pen, path);
+                }
+            }
         }
     }
 }

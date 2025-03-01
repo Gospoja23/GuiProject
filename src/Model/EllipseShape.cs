@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace Draw
@@ -46,32 +47,32 @@ namespace Draw
 				// Ако не е в обхващащия правоъгълник, то неможе да е в обекта и => false
 				return false;
 		}
-		
-		/// <summary>
-		/// Частта, визуализираща конкретния примитив.
-		/// </summary>
-		public override void DrawSelf(Graphics grfx)
-		{
-			base.DrawSelf(grfx);
-			Color c = Color.FromArgb(
-				FillOpacity,
-				FillColor.R,
-				FillColor.G,
-				FillColor.B
-				);
-			
-			grfx.FillEllipse(
-				new SolidBrush(c),
-				Rectangle.X, Rectangle.Y, 
-				Rectangle.Width, 
-				Rectangle.Height);
-			grfx.DrawEllipse(
-				new Pen(StrokeColor, StrokeWidth),
-				Rectangle.X, 
-				Rectangle.Y, 
-				Rectangle.Width, 
-				Rectangle.Height);
-			
-		}
-	}
+
+        /// <summary>
+        /// Частта, визуализираща конкретния примитив.
+        /// </summary>
+        public override void DrawSelf(Graphics grfx)
+        {
+            if (UseGradient)
+            {
+                using (LinearGradientBrush brush = new LinearGradientBrush(
+                    Rectangle, GradientStartColor, GradientEndColor, LinearGradientMode.Vertical))
+                {
+                    grfx.FillEllipse(brush, Rectangle);
+                }
+            }
+            else
+            {
+                using (SolidBrush brush = new SolidBrush(FillColor))
+                {
+                    grfx.FillEllipse(brush, Rectangle);
+                }
+            }
+
+            using (Pen pen = new Pen(StrokeColor, StrokeWidth))
+            {
+                grfx.DrawEllipse(pen, Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
+            }
+        }
+    }
 }

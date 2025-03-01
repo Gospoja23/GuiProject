@@ -76,9 +76,8 @@ namespace Draw
                 new EllipseShape(
                     new Rectangle(x, y, 100, 200)
                 );
-			ellipse.FillColor = Color.Yellow;
-            ellipse.StrokeColor = Color.Red;
-            //ellipse.StrokeWidth = 10;
+			ellipse.FillColor = Color.White;
+            ShapeList.Add(ellipse);
 
 
 
