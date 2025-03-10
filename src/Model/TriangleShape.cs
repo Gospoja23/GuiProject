@@ -92,27 +92,36 @@ namespace Draw
         /// </summary>
         public override void DrawSelf(Graphics grfx)
         {
+            base.DrawSelf(grfx);
+            var state = grfx.Save();
+
+            PointF top = new PointF(Rectangle.X + Rectangle.Width / 2, Rectangle.Y);
+            PointF left = new PointF(Rectangle.X, Rectangle.Y + Rectangle.Height);
+            PointF right = new PointF(Rectangle.X + Rectangle.Width, Rectangle.Y + Rectangle.Height);
+
+            PointF[] points = { top, left, right };
+
             using (GraphicsPath path = new GraphicsPath())
             {
-                PointF top = new PointF(Rectangle.Left + Rectangle.Width / 2, Rectangle.Top);
-                PointF left = new PointF(Rectangle.Left, Rectangle.Bottom);
-                PointF right = new PointF(Rectangle.Right, Rectangle.Bottom);
+                path.AddPolygon(points);
+                grfx.Transform = TransformationMatrix;
 
-                path.AddPolygon(new PointF[] { top, left, right });
+                Color fillColorWithOpacity = Color.FromArgb(FillOpacity, FillColor);
 
                 if (UseGradient)
                 {
                     using (LinearGradientBrush brush = new LinearGradientBrush(
-                        new PointF(Rectangle.Left, Rectangle.Top),  // Начало градиента (верх)
-                        new PointF(Rectangle.Left, Rectangle.Bottom), // Конец градиента (низ)
-                        GradientStartColor, GradientEndColor))
+                        new PointF(Rectangle.Left, Rectangle.Top),
+                        new PointF(Rectangle.Left, Rectangle.Bottom),
+                        Color.FromArgb(FillOpacity, GradientStartColor),
+                        Color.FromArgb(FillOpacity, GradientEndColor)))
                     {
                         grfx.FillPath(brush, path);
                     }
                 }
                 else
                 {
-                    using (SolidBrush brush = new SolidBrush(FillColor))
+                    using (SolidBrush brush = new SolidBrush(fillColorWithOpacity))
                     {
                         grfx.FillPath(brush, path);
                     }
@@ -123,6 +132,8 @@ namespace Draw
                     grfx.DrawPath(pen, path);
                 }
             }
+            grfx.Restore(state);
+
         }
     }
 }

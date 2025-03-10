@@ -46,15 +46,32 @@ namespace Draw
         /// </summary>
         public override void DrawSelf(Graphics grfx)
         {
+            base.DrawSelf(grfx);
+            var state = grfx.Save();
+
+            PointF start = new PointF(Rectangle.Left, Rectangle.Top);
+            PointF end = new PointF(Rectangle.Right, Rectangle.Top);
+
             using (Pen pen = new Pen(StrokeColor, StrokeWidth))
             {
+                grfx.Transform = TransformationMatrix;
+
                 if (UseGradient)
                 {
-                    pen.Brush = new LinearGradientBrush(Rectangle, GradientStartColor, GradientEndColor, LinearGradientMode.Vertical);
+                    using (LinearGradientBrush brush = new LinearGradientBrush(
+                        start, end, GradientStartColor, GradientEndColor))
+                    {
+                        pen.Brush = brush;
+                        grfx.DrawLine(pen, start, end);
+                    }
                 }
-
-                grfx.DrawLine(pen, Rectangle.Left, Rectangle.Top, Rectangle.Right, Rectangle.Top);
+                else
+                {
+                    grfx.DrawLine(pen, start, end);
+                }
             }
+            grfx.Restore(state);
+
         }
     }
 }

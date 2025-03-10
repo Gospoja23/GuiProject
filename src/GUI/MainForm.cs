@@ -212,5 +212,20 @@ namespace Draw
                 viewPort.Invalidate();
             }
         }
+
+        private void RotateButton(object sender, EventArgs e)
+        {
+			if(dialogProcessor.Selection != null)
+			{
+				dialogProcessor.Selection.TransformationMatrix.RotateAt(
+					30,
+					new PointF(
+						dialogProcessor.Selection.Location.X + dialogProcessor.Selection.Width / 2,
+						dialogProcessor.Selection.Location.Y + dialogProcessor.Selection.Height / 2
+
+                        ));
+				viewPort.Invalidate();
+            }
+        }
     }
 }

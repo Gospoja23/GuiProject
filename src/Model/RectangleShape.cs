@@ -44,26 +44,42 @@ namespace Draw
         /// </summary>
         public override void DrawSelf(Graphics grfx)
         {
-            if (UseGradient)
-            {
-                using (LinearGradientBrush brush = new LinearGradientBrush(
-                    Rectangle, GradientStartColor, GradientEndColor, LinearGradientMode.Vertical))
-                {
-                    grfx.FillRectangle(brush, Rectangle);
-                }
-            }
-            else
-            {
-                using (SolidBrush brush = new SolidBrush(FillColor))
-                {
-                    grfx.FillRectangle(brush, Rectangle);
-                }
-            }
+            base.DrawSelf(grfx);
+            var state = grfx.Save();
 
-            using (Pen pen = new Pen(StrokeColor, StrokeWidth))
+            Color fillColorWithOpacity = Color.FromArgb(FillOpacity, FillColor);
+
+            using (GraphicsPath path = new GraphicsPath())
             {
-                grfx.DrawRectangle(pen, Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
+                path.AddRectangle(Rectangle);
+                grfx.Transform = TransformationMatrix;
+
+                if (UseGradient)
+                {
+                    using (LinearGradientBrush brush = new LinearGradientBrush(
+                        new PointF(Rectangle.Left, Rectangle.Top),
+                        new PointF(Rectangle.Left, Rectangle.Bottom),
+                        Color.FromArgb(FillOpacity, GradientStartColor),
+                        Color.FromArgb(FillOpacity, GradientEndColor)))
+                    {
+                        grfx.FillPath(brush, path);
+                    }
+                }
+                else
+                {
+                    using (SolidBrush brush = new SolidBrush(fillColorWithOpacity))
+                    {
+                        grfx.FillPath(brush, path);
+                    }
+                }
+
+                using (Pen pen = new Pen(StrokeColor, StrokeWidth))
+                {
+                    grfx.DrawPath(pen, path);
+                }
             }
+            grfx.Restore(state);
+
         }
 
     }

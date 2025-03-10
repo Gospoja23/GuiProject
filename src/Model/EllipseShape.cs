@@ -53,26 +53,45 @@ namespace Draw
         /// </summary>
         public override void DrawSelf(Graphics grfx)
         {
-            if (UseGradient)
-            {
-                using (LinearGradientBrush brush = new LinearGradientBrush(
-                    Rectangle, GradientStartColor, GradientEndColor, LinearGradientMode.Vertical))
-                {
-                    grfx.FillEllipse(brush, Rectangle);
-                }
-            }
-            else
-            {
-                using (SolidBrush brush = new SolidBrush(FillColor))
-                {
-                    grfx.FillEllipse(brush, Rectangle);
-                }
-            }
+            base.DrawSelf(grfx);
 
-            using (Pen pen = new Pen(StrokeColor, StrokeWidth))
+			var state = grfx.Save();
+
+
+            using (GraphicsPath path = new GraphicsPath())
             {
-                grfx.DrawEllipse(pen, Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
+                path.AddEllipse(Rectangle);
+
+				grfx.Transform = TransformationMatrix;
+                // Применяем прозрачность к цвету заливки
+                Color fillColorWithOpacity = Color.FromArgb(FillOpacity, FillColor);
+
+                if (UseGradient)
+                {
+                    using (LinearGradientBrush brush = new LinearGradientBrush(
+                        new PointF(Rectangle.Left, Rectangle.Top),
+                        new PointF(Rectangle.Left, Rectangle.Bottom),
+                        Color.FromArgb(FillOpacity, GradientStartColor),
+                        Color.FromArgb(FillOpacity, GradientEndColor)))
+                    {
+                        grfx.FillPath(brush, path);
+                    }
+                }
+                else
+                {
+                    using (SolidBrush brush = new SolidBrush(fillColorWithOpacity))
+                    {
+                        grfx.FillPath(brush, path);
+                    }
+                }
+
+                // Рисуем контур с учетом ширины
+                using (Pen pen = new Pen(StrokeColor, StrokeWidth))
+                {
+                    grfx.DrawPath(pen, path);
+                }
             }
+			grfx.Restore(state);
         }
     }
 }

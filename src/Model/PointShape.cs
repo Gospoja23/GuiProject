@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace Draw
 {
@@ -44,18 +45,40 @@ namespace Draw
         public override void DrawSelf(Graphics grfx)
         {
             base.DrawSelf(grfx);
+            var state = grfx.Save();
 
-            grfx.FillEllipse(
-                new SolidBrush(FillColor),
-                Rectangle.X, Rectangle.Y,
-                Rectangle.Width,
-                Rectangle.Height);
-            grfx.DrawEllipse(
-                Pens.Black,
-                Rectangle.X,
-                Rectangle.Y,
-                Rectangle.Width,
-                Rectangle.Height);
+            using (GraphicsPath path = new GraphicsPath())
+            {
+                path.AddEllipse(Rectangle);
+                grfx.Transform = TransformationMatrix;
+
+                Color fillColorWithOpacity = Color.FromArgb(FillOpacity, FillColor);
+
+                if (UseGradient)
+                {
+                    using (LinearGradientBrush brush = new LinearGradientBrush(
+                        new PointF(Rectangle.Left, Rectangle.Top),
+                        new PointF(Rectangle.Left, Rectangle.Bottom),
+                        Color.FromArgb(FillOpacity, GradientStartColor),
+                        Color.FromArgb(FillOpacity, GradientEndColor)))
+                    {
+                        grfx.FillPath(brush, path);
+                    }
+                }
+                else
+                {
+                    using (SolidBrush brush = new SolidBrush(fillColorWithOpacity))
+                    {
+                        grfx.FillPath(brush, path);
+                    }
+                }
+
+                using (Pen pen = new Pen(StrokeColor, StrokeWidth))
+                {
+                    grfx.DrawPath(pen, path);
+                }
+            }
+            grfx.Restore(state);
 
         }
     }

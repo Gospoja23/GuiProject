@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace Draw
 {
@@ -79,7 +80,7 @@ namespace Draw
         public virtual Color StrokeColor
         {
             get { return strokeColor; }
-            set { strokeColor = value; }
+            set { strokeColor = Color.Black; }
         }
 
 		private float strokeWidth=1;
@@ -95,6 +96,15 @@ namespace Draw
 			get { return fillOpacity; }
 			set { fillOpacity = value; }
 		}
+
+		private Matrix transformationMatrix = new Matrix();
+
+		public Matrix TransformationMatrix
+		{
+			get { return transformationMatrix; }
+			set { transformationMatrix = value; }
+			}
+
 
         private Color gradientStartColor = Color.White;
         public virtual Color GradientStartColor

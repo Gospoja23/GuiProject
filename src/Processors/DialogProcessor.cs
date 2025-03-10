@@ -78,11 +78,6 @@ namespace Draw
                 );
 			ellipse.FillColor = Color.White;
             ShapeList.Add(ellipse);
-
-
-
-
-            ShapeList.Add(ellipse);
         }
         public void AddRandomTriangle()
         {

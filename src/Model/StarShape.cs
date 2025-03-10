@@ -44,6 +44,7 @@ namespace Draw
         public override void DrawSelf(Graphics grfx)
         {
             base.DrawSelf(grfx);
+            var state = grfx.Save();
 
             PointF[] starPoints = new PointF[10];
             double angle = -Math.PI / 2;
@@ -75,6 +76,8 @@ namespace Draw
             {
                 grfx.DrawLine(Pens.Black, starPoints[i * 2], starPoints[(i * 2 + 5) % 10]);
             }
+            grfx.Restore(state);
+
         }
 
 
